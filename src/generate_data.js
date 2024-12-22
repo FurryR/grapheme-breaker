@@ -1,6 +1,6 @@
-const request = require('request');
-const fs = require('fs');
-const UnicodeTrieBuilder = require('unicode-trie/builder');
+import request from 'request';
+import fs from 'fs';
+import UnicodeTrieBuilder from 'unicode-trie/builder.js';
 
 const UNICODE_VERSION = '8.0.0';
 const BASE_URL = `http://www.unicode.org/Public/${UNICODE_VERSION}/ucd`;
@@ -29,8 +29,8 @@ request(`${BASE_URL}/auxiliary/GraphemeBreakProperty.txt`, function (err, res, d
   }
 
   // write the trie to a file
-  fs.writeFileSync(__dirname + '/classes.trie', trie.toBuffer());
+  fs.writeFileSync(import.meta.dirname + '/classes.trie', trie.toBuffer());
 
   // write classes to a file
-  fs.writeFileSync(__dirname + '/classes.json', JSON.stringify(classes));
+  fs.writeFileSync(import.meta.dirname + '/classes.json', JSON.stringify(classes));
 });

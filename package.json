@@ -2,43 +2,56 @@
   "name": "grapheme-breaker",
   "version": "0.3.2",
   "description": "An implementation of the Unicode grapheme cluster breaking algorithm (UAX #29)",
-  "main": "src/GraphemeBreaker",
-  "directories": {
-    "test": "test"
+  "source": "src/GraphemeBreaker.js",
+  "type": "module",
+  "main": "dist/main.cjs",
+  "module": "dist/module.mjs",
+  "exports": {
+    "import": "./dist/module.mjs",
+    "require": "./dist/main.cjs"
   },
-  "dependencies": {
-    "brfs": "^2.0.2",
-    "unicode-trie": "^1.0.0"
-  },
-  "devDependencies": {
-    "chai": "^4.2.0",
-    "mocha": "^6.1.4",
-    "request": "^2.88.0"
-  },
-  "scripts": {
-    "test": "mocha"
-  },
-  "browserify": {
-    "transform": [
-      "brfs"
-    ]
-  },
+  "files": [
+    "dist"
+  ],
   "repository": {
     "type": "git",
-    "url": "git://github.com/devongovett/grapheme-breaker"
+    "url": "https://github.com/devongovett/grapheme-breaker.git"
   },
   "keywords": [
     "unicode",
     "text",
-    "break",
-    "segment",
-    "character",
-    "grapheme cluster"
+    "wrapping"
   ],
   "author": "Devon Govett <devongovett@gmail.com>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/devongovett/grapheme-breaker/issues"
   },
-  "homepage": "https://github.com/devongovett/grapheme-breaker"
+  "homepage": "https://github.com/devongovett/grapheme-breaker",
+  "dependencies": {
+    "base64-js": "0.0.8",
+    "mocha": "^11.0.1",
+    "unicode-trie": "^2.0.0"
+  },
+  "devDependencies": {
+    "parcel": "^2.13.3",
+    "request": "^2.88.0"
+  },
+  "scripts": {
+    "test": "parcel build && mocha test/index.js --reporter landing",
+    "build": "parcel build",
+    "prepublishOnly": "parcel build"
+  },
+  "targets": {
+    "main": {
+      "includeNodeModules": [
+        "fs"
+      ]
+    },
+    "module": {
+      "includeNodeModules": [
+        "fs"
+      ]
+    }
+  }
 }

@@ -1,12 +1,12 @@
-const { expect } = require('chai');
-const fs = require('fs');
-const punycode = require('punycode');
-const GraphemeBreaker = require('../src/GraphemeBreaker');
+import fs from 'fs';
+import punycode from 'punycode';
+import * as GraphemeBreaker from '../dist/module.mjs';
+import assert from 'assert';
 
 describe('GraphemeBreaker', function () {
   it('basic test', function () {
     const broken = GraphemeBreaker.break('Z͑ͫ̓ͪ̂ͫ̽͏̴̙̤̞͉͚̯̞̠͍A̴̵̜̰͔ͫ͗͢L̠ͨͧͩ͘G̴̻͈͍͔̹̑͗̎̅͛́Ǫ̵̹̻̝̳͂̌̌͘!͖̬̰̙̗̿̋ͥͥ̂ͣ̐́́͜͞');
-    expect(broken).to.deep.equal(['Z͑ͫ̓ͪ̂ͫ̽͏̴̙̤̞͉͚̯̞̠͍', 'A̴̵̜̰͔ͫ͗͢', 'L̠ͨͧͩ͘', 'G̴̻͈͍͔̹̑͗̎̅͛́', 'Ǫ̵̹̻̝̳͂̌̌͘', '!͖̬̰̙̗̿̋ͥͥ̂ͣ̐́́͜͞']);
+    assert.deepEqual(broken, ['Z͑ͫ̓ͪ̂ͫ̽͏̴̙̤̞͉͚̯̞̠͍', 'A̴̵̜̰͔ͫ͗͢', 'L̠ͨͧͩ͘', 'G̴̻͈͍͔̹̑͗̎̅͛́', 'Ǫ̵̹̻̝̳͂̌̌͘', '!͖̬̰̙̗̿̋ͥͥ̂ͣ̐́́͜͞']);
   });
 
   it('nextBreak', function () {
@@ -21,7 +21,7 @@ describe('GraphemeBreaker', function () {
     }
 
     res.push(str.slice(index));
-    expect(res).to.deep.equal(['Z͑ͫ̓ͪ̂ͫ̽͏̴̙̤̞͉͚̯̞̠͍', 'A̴̵̜̰͔ͫ͗͢', 'L̠ͨͧͩ͘', 'G̴̻͈͍͔̹̑͗̎̅͛́', 'Ǫ̵̹̻̝̳͂̌̌͘', '!͖̬̰̙̗̿̋ͥͥ̂ͣ̐́́͜͞']);
+    assert.deepEqual(res, ['Z͑ͫ̓ͪ̂ͫ̽͏̴̙̤̞͉͚̯̞̠͍', 'A̴̵̜̰͔ͫ͗͢', 'L̠ͨͧͩ͘', 'G̴̻͈͍͔̹̑͗̎̅͛́', 'Ǫ̵̹̻̝̳͂̌̌͘', '!͖̬̰̙̗̿̋ͥͥ̂ͣ̐́́͜͞']);
   });
 
   it('nextBreak intermediate indexes', function () {
@@ -33,7 +33,9 @@ describe('GraphemeBreaker', function () {
       breaks[brk] = brk;
     }
 
-    expect(Object.keys(breaks).map(b => breaks[b])).to.deep.equal([0, 19, 28, 34, 47, 58, 75]);
+    assert.deepEqual(Object.keys(breaks).map(b => breaks[b]), [
+      0, 19, 28, 34, 47, 58, 75
+    ]);
   });
 
   it('previousBreak', function () {
@@ -48,7 +50,7 @@ describe('GraphemeBreaker', function () {
     }
 
     res.push(str.slice(0, index));
-    expect(res).to.deep.equal(['Z͑ͫ̓ͪ̂ͫ̽͏̴̙̤̞͉͚̯̞̠͍', 'A̴̵̜̰͔ͫ͗͢', 'L̠ͨͧͩ͘', 'G̴̻͈͍͔̹̑͗̎̅͛́', 'Ǫ̵̹̻̝̳͂̌̌͘', '!͖̬̰̙̗̿̋ͥͥ̂ͣ̐́́͜͞'].reverse());
+    assert.deepEqual(res, ['Z͑ͫ̓ͪ̂ͫ̽͏̴̙̤̞͉͚̯̞̠͍', 'A̴̵̜̰͔ͫ͗͢', 'L̠ͨͧͩ͘', 'G̴̻͈͍͔̹̑͗̎̅͛́', 'Ǫ̵̹̻̝̳͂̌̌͘', '!͖̬̰̙̗̿̋ͥͥ̂ͣ̐́́͜͞'].reverse());
   });
 
   it('previousBreak intermediate indexes', function () {
@@ -60,7 +62,7 @@ describe('GraphemeBreaker', function () {
       breaks[brk] = brk;
     }
 
-    expect(Object.keys(breaks).map(b => breaks[b])).to.deep.equal([0, 19, 28, 34, 47, 58, 75]);
+    assert.deepEqual(Object.keys(breaks).map(b => breaks[b]), [0, 19, 28, 34, 47, 58, 75]);
   });
 
   it('previousBreak handles astral characters (e.g. emoji)', function () {
@@ -75,7 +77,7 @@ describe('GraphemeBreaker', function () {
     }
 
     res.push(str.slice(0, index));
-    expect(res).to.deep.equal(['👍', '🇺🇸', '😜']);
+    assert.deepEqual(res, ['👍', '🇺🇸', '😜']);
   });
 
   it('nextBreak handles astral characters (e.g. emoji)', function () {
@@ -90,11 +92,11 @@ describe('GraphemeBreaker', function () {
     }
 
     res.push(str.slice(index));
-    expect(res).to.deep.equal(['😜', '🇺🇸', '👍']);
+    assert.deepEqual(res, ['😜', '🇺🇸', '👍']);
   });
 
   it('should pass all tests in GraphemeBreakTest.txt', function () {
-    const data = fs.readFileSync(__dirname + '/GraphemeBreakTest.txt', 'utf8');
+    const data = fs.readFileSync(import.meta.dirname + '/GraphemeBreakTest.txt', 'utf8');
     const lines = data.split('\n');
 
     for (let line of lines) {
@@ -103,23 +105,29 @@ describe('GraphemeBreaker', function () {
       }
 
       let [cols, comment] = line.split('#');
-      const codePoints = cols.split(/\s*[×÷]\s*/).filter(Boolean).map(c => parseInt(c, 16));
+      const codePoints = cols
+        .split(/\s*[×÷]\s*/)
+        .filter(Boolean)
+        .map(c => parseInt(c, 16));
       const str = punycode.ucs2.encode(codePoints);
 
-      const expected = cols.split(/\s*÷\s*/).filter(Boolean).map(function (c) {
-        let codes = c.split(/\s*×\s*/);
-        codes = codes.map(c => parseInt(c, 16));
-        return punycode.ucs2.encode(codes);
-      });
+      const expected = cols
+        .split(/\s*÷\s*/)
+        .filter(Boolean)
+        .map(function (c) {
+          let codes = c.split(/\s*×\s*/);
+          codes = codes.map(c => parseInt(c, 16));
+          return punycode.ucs2.encode(codes);
+        });
 
       comment = comment.trim();
-      expect(GraphemeBreaker.break(str)).to.deep.equal(expected, comment);
-      expect(GraphemeBreaker.countBreaks(str)).to.equal(expected.length, comment);
+      assert.deepEqual(GraphemeBreaker.break(str), expected, comment);
+      assert.deepEqual(GraphemeBreaker.countBreaks(str), expected.length, comment);
     }
   });
 
   it('should pass all tests in GraphemeBreakTest.txt in reverse', function () {
-    const data = fs.readFileSync(__dirname + '/GraphemeBreakTest.txt', 'utf8');
+    const data = fs.readFileSync(import.meta.dirname + '/GraphemeBreakTest.txt', 'utf8');
     const lines = data.split('\n');
 
     for (let line of lines) {
@@ -129,14 +137,20 @@ describe('GraphemeBreaker', function () {
       }
 
       const [cols, comment] = line.split('#');
-      const codePoints = cols.split(/\s*[×÷]\s*/).filter(Boolean).map(c => parseInt(c, 16));
+      const codePoints = cols
+        .split(/\s*[×÷]\s*/)
+        .filter(Boolean)
+        .map(c => parseInt(c, 16));
       const str = punycode.ucs2.encode(codePoints);
 
-      const expected = cols.split(/\s*÷\s*/).filter(Boolean).map(function (c) {
-        let codes = c.split(/\s*×\s*/);
-        codes = codes.map(c => parseInt(c, 16));
-        return punycode.ucs2.encode(codes);
-      });
+      const expected = cols
+        .split(/\s*÷\s*/)
+        .filter(Boolean)
+        .map(function (c) {
+          let codes = c.split(/\s*×\s*/);
+          codes = codes.map(c => parseInt(c, 16));
+          return punycode.ucs2.encode(codes);
+        });
 
       const res = [];
       let index = str.length;
@@ -146,7 +160,7 @@ describe('GraphemeBreaker', function () {
       }
 
       res.push(str.slice(0, index));
-      expect(res).to.deep.equal(expected.reverse(), comment.trim());
+      assert.deepEqual(res, expected.reverse(), comment.trim());
     }
   });
 });

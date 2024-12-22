@@ -1,6 +1,7 @@
-const { CR, LF, Control, Extend, Regional_Indicator, SpacingMark, L, V, T, LV, LVT } = require('./classes.json');
-const UnicodeTrie = require('unicode-trie');
-const fs = require('fs');
+import fs from 'fs';
+const { CR, LF, Control, Extend, Regional_Indicator, SpacingMark, L, V, T, LV, LVT } = JSON.parse(fs.readFileSync(__dirname + '/classes.json'));
+
+import UnicodeTrie from 'unicode-trie';
 const classTrie = new UnicodeTrie(fs.readFileSync(__dirname + '/classes.trie'));
 
 // Gets a code point from a UTF-16 string
@@ -85,7 +86,7 @@ const shouldBreak = function (previous, current) {
 };
 
 // Returns the next grapheme break in the string after the given index
-exports.nextBreak = function (string, index) {
+export function nextBreak (string, index) {
   if (index == null) {
     index = 0;
   }
@@ -118,7 +119,7 @@ exports.nextBreak = function (string, index) {
 };
 
 // Returns the next grapheme break in the string before the given index
-exports.previousBreak = function (string, index) {
+export function previousBreak (string, index) {
   if (index == null) {
     index = string.length;
   }
@@ -152,12 +153,12 @@ exports.previousBreak = function (string, index) {
 };
 
 // Breaks the given string into an array of grapheme cluster strings
-exports.break = function (str) {
+function breakLine (str) {
   let brk;
   const res = [];
   let index = 0;
 
-  while ((brk = exports.nextBreak(str, index)) < str.length) {
+  while ((brk = nextBreak(str, index)) < str.length) {
     res.push(str.slice(index, brk));
     index = brk;
   }
@@ -170,12 +171,12 @@ exports.break = function (str) {
 };
 
 // Returns the number of grapheme clusters there are in the given string
-exports.countBreaks = function (str) {
+export function countBreaks (str) {
   let brk;
   let count = 0;
   let index = 0;
 
-  while ((brk = exports.nextBreak(str, index)) < str.length) {
+  while ((brk = nextBreak(str, index)) < str.length) {
     index = brk;
     count++;
   }
@@ -186,3 +187,5 @@ exports.countBreaks = function (str) {
 
   return count;
 };
+
+export { breakLine as break };
